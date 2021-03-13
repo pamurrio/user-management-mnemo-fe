@@ -1,7 +1,10 @@
+import { Search } from './../../model/search.model';
 import { Component, OnInit , Inject} from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import {Router} from "@angular/router";
 import {User} from "../../model/user.model";
 import {ApiService} from "../../service/api.service";
+import { Group } from 'src/app/model/group.model';
 
 @Component({
   selector: 'app-list-user',
@@ -10,24 +13,35 @@ import {ApiService} from "../../service/api.service";
 })
 export class ListUserComponent implements OnInit {
 
-  public users: User[];
-
-  constructor(private router: Router, private apiService: ApiService) {
-    this.users = new Array<User>();
+  users: User[];
+  searchData: Search;
+  searchForm: FormGroup;
+  groups: Group[];
+  constructor(private router: Router, private apiService: ApiService,private formBuilder: FormBuilder) {
+    this.users = [];
+    this.searchForm = this.formBuilder.group({});
+    this.searchData = new Search();
+    this.groups = [];
    }
 
   ngOnInit() {
 
-    this.apiService.findPageAndSortAndFilterUser(new Map())
+    this.apiService.findPageAndSortAndFilterUser(this.searchData)
       .subscribe( data => {
         this.users = data.content;
       });
+    this.apiService.findAllGroup().subscribe(data => {
+      this.groups = data;
+    });
   }
 
   deleteUser(user: User): void {
     this.apiService.deleteUser(user.id)
       .subscribe( data => {
-        this.users = this.users.filter(u => u !== user);
+        this.apiService.findPageAndSortAndFilterUser(this.searchData)
+        .subscribe( data => {
+          this.users = data.content;
+        });
       })
   };
 
@@ -40,4 +54,12 @@ export class ListUserComponent implements OnInit {
   addUser(): void {
     this.router.navigate(['add-user']);
   };
+
+
+  onSearch(): void {
+    this.apiService.findPageAndSortAndFilterUser(this.searchData)
+    .subscribe( data => {
+      this.users = data.content;
+    });
+  }
 }

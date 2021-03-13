@@ -1,7 +1,10 @@
+import { Group } from './../../model/group.model';
 import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
 import {ApiService} from "../../service/api.service";
+import { User } from 'src/app/model/user.model';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-add-user',
@@ -10,30 +13,42 @@ import {ApiService} from "../../service/api.service";
 })
 export class AddUserComponent implements OnInit {
 
+  addForm: FormGroup;
+  groups: Group[];
+
   constructor(private formBuilder: FormBuilder,private router: Router, private apiService: ApiService) {
     this.addForm = this.formBuilder.group({});
+    this.groups = [];
   }
-
-  addForm: FormGroup;
-
   ngOnInit() {
+     this.apiService.findAllGroup().subscribe(data => {
+       this.groups = data;
+     });
     this.addForm = this.formBuilder.group({
       id: [],
-      username: ['', Validators.required],
-      password: ['', Validators.required],
-      firstName: ['', Validators.required],
+      name: ['', Validators.required],
       lastName: ['', Validators.required],
-      age: ['', Validators.required],
-      salary: ['', Validators.required]
+      code: ['', Validators.required],
+      group: ['', Validators.required]
     });
 
   }
 
   onSubmit() {
-    this.apiService.createUser(this.addForm.value)
+    if(this.addForm.valid){
+     let userDto: User = this.addForm.value;
+     let groupDto: Group = new Group(this.addForm.value.group);
+     userDto.group = groupDto;
+      this.apiService.createUser(userDto)
       .subscribe( data => {
         this.router.navigate(['list-user']);
+      },
+      (ex:HttpErrorResponse) => {
+        alert(ex.error.message);
       });
+      return;
+    }
+    alert("Is required all field");
   }
 
 }

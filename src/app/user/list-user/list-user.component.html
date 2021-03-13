@@ -1,8 +1,33 @@
 <div class="col-md-12 user-container">
   <h2 style="margin: auto">List Users Management</h2>
   <button class="btn btn-success" style="width:100px" (click)="addUser()"> Add User</button>
+  <button class="btn btn-info" style="width:100px" (click)="onSearch()"> Filter</button>
   <table class="table table-striped">
     <thead>
+      <tr>
+        <th class="hidden"> <div><label>Sort Field</label></div>
+          <select [(ngModel)]="searchData.sort">
+          <option  value=""></option>
+          <option  value="name">Name</option>
+          <option  value="lastName">Last Name</option>
+          <option  value="code">Code</option>
+        </select></th>
+        <th><input [(ngModel)]="searchData.name"></th>
+        <th><input [(ngModel)]="searchData.lastName"></th>
+        <th><input [(ngModel)]="searchData.code"></th>
+        <th><select [(ngModel)]="searchData.group">
+          <option  [value]="undefined" [selected]="true" >All</option>
+            <option  *ngFor="let group of groups" [value]="group.id">{{group.name}}</option>
+        </select></th>
+        <th>
+          <div><label>Size for page</label></div>
+          <select [(ngModel)]="searchData.size">
+          <option  value="5">5</option>
+          <option  value="10">10</option>
+          <option  value="50">50</option>
+          <option  value="100">100</option>
+        </select></th>
+      </tr>
     <tr>
       <th class="hidden">Id</th>
       <th>Name</th>
@@ -14,9 +39,9 @@
     <tbody>
     <tr *ngFor="let user of users">
       <td class="hidden">{{user.id}}</td>
-      <td>{{user.name}}</td>
-      <td>{{user.lastName}}</td>
-      <td>{{user.code}}</td>
+      <td >{{user.name}}</td>
+      <td >{{user.lastName}}</td>
+      <td >{{user.code}}</td>
       <td>{{user.group?.name}}</td>
       <td><button class="btn btn-danger" (click)="deleteUser(user)"> Delete</button>
         <button class="btn btn-info" (click)="editUser(user)" style="margin-left: 20px;"> Edit</button></td>

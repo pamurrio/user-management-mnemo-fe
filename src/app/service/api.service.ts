@@ -18,7 +18,7 @@ export class ApiService {
   }
 
   createUser(user: User): Observable<ApiResponse> {
-    return this.http.post<ApiResponse>(this.baseUrl+ 'users/created/', user);
+    return this.http.post<ApiResponse>(this.baseUrl+ 'users/created', user);
   }
 
   updateUser(user: User): Observable<ApiResponse> {
@@ -29,15 +29,15 @@ export class ApiService {
     return this.http.delete<ApiResponse>(this.baseUrl + 'users/delete/' + id);
   }
 
-  findAllGroup(): Observable<ApiResponse> {
-    return this.http.delete<ApiResponse>(this.baseUrl + 'groups/findAll');
+  findAllGroup(): Observable<any> {
+    return this.http.get<any>(this.baseUrl + 'groups/findAll');
   }
 
-  findPageAndSortAndFilterUser(param: Map<string, string>): Observable<ApiPageUserResponse> {
+  findPageAndSortAndFilterUser(param: any): Observable<ApiPageUserResponse> {
     let params = new HttpParams();
-    param.forEach((k, v) => {
-      params.append(k, v);
-    });
-    return this.http.get<ApiPageUserResponse>(this.baseUrl + 'users/pagingfilteringandsorting', {params: params});
+    for (let key in param) {
+      params = params.set(key, param[key]);
+    }
+    return this.http.get<ApiPageUserResponse>(this.baseUrl + 'users/pagingfilteringandsorting', {params});
   }
 }

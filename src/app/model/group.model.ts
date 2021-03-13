@@ -1,6 +1,9 @@
 export class Group {
 
-  id?: Number;
+  id?: number;
   name?: string;
 
+  constructor(_id: number){
+    this.id = _id;
+  }
 }

@@ -2,33 +2,26 @@
   <h2 class="text-center">Add User</h2>
   <form [formGroup]="addForm" (ngSubmit)="onSubmit()">
     <div class="form-group">
-      <label for="username">User Name:</label>
-      <input type="text" formControlName="username" placeholder="username" name="username" class="form-control" id="username">
-    </div>
-
-    <div class="form-group">
-      <label for="password">Password:</label>
-      <input type="password" formControlName="password" placeholder="password" name="password" class="form-control" id="password">
-    </div>
-
-    <div class="form-group">
-      <label for="firstName">First Name:</label>
-      <input formControlName="firstName" placeholder="First Name" name="firstName" class="form-control" id="firstName">
+      <label for="name">Name:</label>
+      <input required type="text" maxlength="20" formControlName="name" placeholder="Name" name="name" class="form-control" id="name">
     </div>
 
     <div class="form-group">
       <label for="lastName">Last Name:</label>
-      <input formControlName="lastName" placeholder="Last name" name="lastName" class="form-control" id="lastName">
+      <input required formControlName="lastName" maxlength="40" placeholder="Last name" name="lastName" class="form-control" id="lastName">
     </div>
 
     <div class="form-group">
-      <label for="age">Age:</label>
-      <input type="number" formControlName="age" placeholder="age" name="age" class="form-control" id="age">
+      <label for="code">Code:</label>
+      <input required formControlName="code" maxlength="40" placeholder="Code" name="code" class="form-control" id="code">
     </div>
 
     <div class="form-group">
-      <label for="salary">Salary:</label>
-      <input type="number" formControlName="salary" placeholder="salary" name="salary" class="form-control" id="salary">
+      <label for="group">Name Group:</label>
+      <select required formControlName="group" ngModel="" placeholder="Name Group" name="group" class="form-control" id="group">
+        <option  value="" [selected]="true" >Select in Group</option>
+          <option  *ngFor="let group of groups" [value]="group.id">{{group.name}}</option>
+      </select>
     </div>
 
     <button class="btn btn-success">Add</button>
